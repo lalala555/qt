@@ -1,0 +1,26 @@
+       m_checkheaderview = new CheckBoxHeaderView(0, QPoint(40, 13), QSize(20, 20), Qt::Horizontal, this);//初始化
+	      //加入表头列表
+          QStandardItemModel* model = new QStandardItemModel;
+           QStringList labels;
+           labels <<QStringLiteral("")<< QStringLiteral("name") << QStringLiteral("ground") << QStringLiteral("number");
+           model->setHorizontalHeaderLabels(labels);
+           m_checkheaderview->setModel(model);
+        
+          m_checkheaderview->setObjectName(QStringLiteral("m_checkHeaderView"));
+          m_checkheaderview->setStretchLastSection(true);
+		  //加入tablewidget
+           ui->tableWidget->setHorizontalHeader(m_checkheaderview);
+		   //全选，全不选
+		    connect(m_checkheaderview,&CheckBoxHeaderView::checkStatusChange,this,[=](bool value){
+               for(int i = 0 ; i < 10;i++)
+               {
+                   if(value)
+                    ui->tableWidget->item(i, 0)->setCheckState(Qt::Checked);
+                   else
+                        ui->tableWidget->item(i, 0)->setCheckState(Qt::Unchecked);
+               }
+               on_activebutton(1,0);
+           });
+		   //未完全选
+          connect(ui->tableWidget, SIGNAL(cellClicked(int, int)), this, SLOT(on_activebutton(int, int)));
+          connect(this,SIGNAL(SignalCheck(int)),m_checkheaderview,SLOT(checkstate(int)));
